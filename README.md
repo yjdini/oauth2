@@ -37,12 +37,14 @@
     },
     "status": "ok"
 }
- 
+```
+```
 {
     "message": "用户名、密码错误"|"code错误",
     "status":  "error"
 }
- 
+```
+```
 {
     "message": "code过期",
     "status":  "unlogin"
@@ -68,7 +70,8 @@
     },
     "status": "ok"
 }
- 
+```
+```
 {
     "message": "token错误或已过期",
     "status":  "error"
@@ -110,7 +113,8 @@
     },
     "status": "ok"
 }
- 
+```
+```
 {
     "message": "token错误或已过期",
     "status":  "error"

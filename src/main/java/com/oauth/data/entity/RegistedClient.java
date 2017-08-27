@@ -1,4 +1,4 @@
-package com.ini.data.entity;
+package com.oauth.data.entity;
 
 import javax.persistence.*;
 

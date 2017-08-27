@@ -1,12 +1,9 @@
-package com.ini.service;
+package com.oauth.service;
 
-import com.ini.data.entity.OpenUser;
-import com.ini.data.entity.RegistedClient;
-import com.ini.data.entity.User;
-import com.ini.data.entity.UserLoginCode;
-import com.ini.data.jpa.OpenUserRepository;
-import com.ini.util.MD5Util;
-import com.ini.util.MapBuilder;
+import com.oauth.data.entity.RegistedClient;
+import com.oauth.util.MD5Util;
+import com.oauth.util.MapBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
@@ -60,7 +57,7 @@ public class OAuthService extends BaseService {
         if ( verifyClientHosts(client_id, redirect_uri) ) {
             return "client_app错误或重定向url未配置";
         }
-        if ( getUserId(loginCode) != null ) {
+        if ( userService.getUserIdByLoginCode(loginCode) != null ) {
             String innerCode = loginCode + "#" + client_id + "#" +System.currentTimeMillis()%10000;
             String outCode = aesUtil.encrypt(innerCode);
             try {
@@ -89,13 +86,13 @@ public class OAuthService extends BaseService {
         if ( !client_id.equals(clientId) )
             return MapBuilder.error("code错误").getMap();
 
-        Integer userId = getUserId(loginCode);
+        Integer userId = userService.getUserIdByLoginCode(loginCode);
 
         if ( userId == null )
             return MapBuilder.instance().put("status","unlogin")
                     .setMessage("code过期").getMap();
 
-        Integer openId = getOpenId(clientId, userId);
+        Integer openId = userService.getOpenId(clientId, userId);
         String accessToken = generateAccessToken(userId, clientId);
 
         
@@ -117,7 +114,7 @@ public class OAuthService extends BaseService {
         Map info = tokenMap.get(access_token);
         if (info == null)
             return MapBuilder.error("token错误或已过期").getMap();
-        info.put("expires_in", getEmpires((Long) info.get("create_at")));
+        info.put("expires_in", (long) info.get("create_at") + expiresIn - System.currentTimeMillis()/1000);
         return MapBuilder.ok().put("result", info).getMap();
     }
 
@@ -131,16 +128,8 @@ public class OAuthService extends BaseService {
         if (info == null)
             return MapBuilder.error("token错误或已过期").getMap();
         Integer openId = (Integer) info.get("uid");
-        Map user = getUserInfo(openId);
+        Map user = userService.getUserInfoByOpenId(openId);
         return MapBuilder.ok().put("result", user).getMap();
-    }
-
-    private Map getUserInfo(Integer openId) {
-        Integer userId = openUserRepository.findOne(openId).getUserId();
-        User user = userRepository.findOne(userId);
-        Map result = new HashMap();
-        result.put("user", user);
-        return result;
     }
 
     private void addToGclist(String accessToken) {
@@ -148,30 +137,8 @@ public class OAuthService extends BaseService {
         gcList[to] = gcList[to]+"#"+accessToken;
     }
 
-    private long getEmpires(long create_at) {
-        return create_at + expiresIn - System.currentTimeMillis()/1000;
-    }
-
     private String generateAccessToken(Integer userId, String clientId) {
         return MD5Util.MD5(userId + System.currentTimeMillis() + clientId);
-    }
-
-    private Integer getOpenId(String clientId, Integer userId) {
-        List<OpenUser> openUsers = openUserRepository.findByClientIdAndUserId(clientId, userId);
-        if ( openUsers == null || openUsers.size() == 0) {
-            OpenUser openUser = new OpenUser();
-            openUser.setClientId(clientId);
-            openUser.setUserId(userId);
-            return openUserRepository.save(openUser).getOpenId();
-        }
-        return openUsers.get(0).getOpenId();
-    }
-
-    private Integer getUserId(String loginCode) {
-        UserLoginCode userLoginCode = userLoginCodeRepository.findOne(loginCode);
-        if (userLoginCode == null)
-            return null;
-        return userLoginCode.getUserId();
     }
 
     private boolean verifyClientHosts(String client_id, String redirect_uri) {
@@ -191,4 +158,6 @@ public class OAuthService extends BaseService {
         return !(registedClient == null || !registedClient.getClientSecret().equals(client_secret));
     }
 
+    @Autowired
+    private UserService userService;
 }

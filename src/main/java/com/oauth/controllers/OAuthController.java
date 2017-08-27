@@ -1,8 +1,8 @@
-package com.ini.controllers;
+package com.oauth.controllers;
 
-import com.ini.service.OAuthService;
-import com.ini.util.MapBuilder;
-import com.ini.util.StringUtil;
+import com.oauth.service.OAuthService;
+import com.oauth.util.MapBuilder;
+import com.oauth.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,19 +23,18 @@ import java.util.Map;
 @RestController
 public class OAuthController {
 
-    private final OAuthService oAuthService;
+    @Autowired
+    private OAuthService oAuthService;
 
     @RequestMapping(value = "/authorize")
     public String authorize (HttpServletRequest request, HttpServletResponse response) {
         String client_id = request.getParameter("client_id");
         String redirect_uri = request.getParameter("redirect_uri");
         String code = getLoginCode(request);
-
         if ( StringUtil.isBlank(client_id) || StringUtil.isBlank(redirect_uri) || StringUtil.isBlank(code) )
             return "缺少参数";
 
         return oAuthService.authorize(client_id, redirect_uri, code, response);
-
     }
 
     @RequestMapping(value = "/access_token", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -74,7 +73,7 @@ public class OAuthController {
         return oAuthService.userInfo(access_token);
     }
 
-    private String getLoginCode(HttpServletRequest request) {
+    static String getLoginCode(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         String code = null;
         if (cookies == null)
@@ -85,10 +84,5 @@ public class OAuthController {
             }
         }
         return null;
-    }
-
-    @Autowired
-    public OAuthController(OAuthService oAuthService) {
-        this.oAuthService = oAuthService;
     }
 }

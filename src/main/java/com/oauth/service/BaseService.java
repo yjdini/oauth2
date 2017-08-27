@@ -1,10 +1,10 @@
-package com.ini.service;
+package com.oauth.service;
 
-import com.ini.data.jpa.OpenUserRepository;
-import com.ini.data.jpa.RegistedClientRepository;
-import com.ini.data.jpa.UserLoginCodeRepository;
-import com.ini.data.jpa.UserRepository;
-import com.ini.util.AESUtil;
+import com.oauth.data.jpa.OpenUserRepository;
+import com.oauth.data.jpa.RegistedClientRepository;
+import com.oauth.data.jpa.UserLoginCodeRepository;
+import com.oauth.data.jpa.UserRepository;
+import com.oauth.util.AESUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

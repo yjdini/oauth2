@@ -1,6 +1,6 @@
-package com.ini.data.jpa;
+package com.oauth.data.jpa;
 
-import com.ini.data.entity.OpenUser;
+import com.oauth.data.entity.OpenUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.QueryByExampleExecutor;
 

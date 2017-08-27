@@ -1,4 +1,4 @@
-package com.ini.data.entity;
+package com.oauth.data.entity;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -40,5 +40,10 @@ public class UserLoginCode {
 
     public void setExpires(Date expires) {
         this.expires = expires;
+    }
+
+    public UserLoginCode(String loginCode, Integer userId) {
+        this.loginCode = loginCode;
+        this.userId = userId;
     }
 }

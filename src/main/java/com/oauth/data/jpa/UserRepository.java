@@ -1,6 +1,6 @@
-package com.ini.data.jpa;
+package com.oauth.data.jpa;
 
-import com.ini.data.entity.User;
+import com.oauth.data.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.QueryByExampleExecutor;
 
@@ -9,4 +9,7 @@ import org.springframework.data.repository.query.QueryByExampleExecutor;
  *
  */
 public interface UserRepository extends JpaRepository<User, Integer>, QueryByExampleExecutor<User> {
+    User findByAccountAndPassword(String account, String password);
+
+    User findByOpenId(String openId);
 }

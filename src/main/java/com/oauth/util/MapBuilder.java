@@ -1,4 +1,4 @@
-package com.ini.util;
+package com.oauth.util;
 
 import java.util.HashMap;
 import java.util.Map;

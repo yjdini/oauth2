@@ -1,7 +1,6 @@
-package com.ini.util;
+package com.oauth.util;
 
 import java.security.MessageDigest;
-import java.util.Calendar;
 
 public class MD5Util {
 

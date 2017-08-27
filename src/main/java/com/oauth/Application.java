@@ -1,9 +1,8 @@
-package com.ini;
+package com.oauth;
 
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -14,8 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 
 @SpringBootApplication
-@ServletComponentScan("com.ini.framework")
-@EnableJpaRepositories(basePackages = "com.ini.data.jpa")
+@EnableJpaRepositories(basePackages = "com.oauth.data.jpa")
 @Configuration
 public class Application extends WebMvcConfigurerAdapter {
 

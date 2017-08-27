@@ -1,4 +1,4 @@
-package com.ini.util;
+package com.oauth.util;
 
 /**
  * Created by yjdini on 2017/8/15.

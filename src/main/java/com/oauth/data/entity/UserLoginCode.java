@@ -46,4 +46,7 @@ public class UserLoginCode {
         this.loginCode = loginCode;
         this.userId = userId;
     }
+
+    public UserLoginCode() {
+    }
 }

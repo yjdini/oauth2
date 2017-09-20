@@ -11,11 +11,32 @@ import javax.persistence.*;
 @Table(name = "RegistedClient")
 public class RegistedClient {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     private String clientId;
+
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     private String clientSecret;
 
     private String allowedHosts;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getClientId() {
         return clientId;

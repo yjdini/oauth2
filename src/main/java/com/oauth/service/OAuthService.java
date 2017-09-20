@@ -142,7 +142,7 @@ public class OAuthService extends BaseService {
     }
 
     private boolean verifyClientHosts(String client_id, String redirect_uri) {
-        RegistedClient registedClient = registedClientRepository.findOne(client_id);
+        RegistedClient registedClient = registedClientRepository.findByClientId(client_id).get(0);
         if (registedClient == null)
             return false;
         String hosts = registedClient.getAllowedHosts();
@@ -154,7 +154,7 @@ public class OAuthService extends BaseService {
     }
 
     private boolean verifyClientSecret(String client_id, String client_secret) {
-        RegistedClient registedClient = registedClientRepository.findOne(client_id);
+        RegistedClient registedClient = registedClientRepository.findByClientId(client_id).get(0);
         return !(registedClient == null || !registedClient.getClientSecret().equals(client_secret));
     }
 

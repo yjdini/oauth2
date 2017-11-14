@@ -93,21 +93,24 @@ public class OAuthService extends BaseService {
                     .setMessage("code过期").getMap();
 
         Integer openId = userService.getOpenId(clientId, userId);
-        String accessToken = generateAccessToken(userId, clientId);
-
-        
-        Map tokenInfo = MapBuilder.instance().put("uid", openId)
-                .put("client_id", client_id)
-                .put("create_at", System.currentTimeMillis()/1000)
-                .getMap();
-        tokenMap.put(accessToken, tokenInfo);
-        addToGclist(accessToken);
+        String accessToken = storageAccessToken(clientId, userId, openId);
 
         Map<String, Object> result = new HashMap<>();
         result.put("access_token", accessToken);
         result.put("expires_in", expiresIn);
         result.put("uid", openId);
         return MapBuilder.ok().put("result", result).getMap();
+    }
+
+    public String storageAccessToken(String clientId, Integer userId, Integer openId) {
+        String accessToken = generateAccessToken(userId, clientId);
+        Map tokenInfo = MapBuilder.instance().put("uid", openId)
+                .put("client_id", clientId)
+                .put("create_at", System.currentTimeMillis()/1000)
+                .getMap();
+        tokenMap.put(accessToken, tokenInfo);
+        addToGclist(accessToken);
+        return accessToken;
     }
 
     public Map getTokenInfo(String access_token) {
